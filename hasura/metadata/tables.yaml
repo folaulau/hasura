@@ -27,6 +27,51 @@
           user_id:
             _eq: x-Hasura-user-id
 - table:
+    name: chat_messages
+    schema: public
+  object_relationships:
+    - name: chat
+      using:
+        foreign_key_constraint_on: chat_id
+    - name: user
+      using:
+        foreign_key_constraint_on: user_id
+  select_permissions:
+    - role: user
+      permission:
+        columns:
+          - id
+          - created_at
+          - deleted
+          - message
+          - updated_at
+          - uuid
+          - chat_id
+          - user_id
+        filter: {}
+- table:
+    name: chats
+    schema: public
+  array_relationships:
+    - name: chat_messages
+      using:
+        foreign_key_constraint_on:
+          column: chat_id
+          table:
+            name: chat_messages
+            schema: public
+  select_permissions:
+    - role: user
+      permission:
+        columns:
+          - id
+          - deleted
+          - title
+          - uuid
+          - created_at
+          - updated_at
+        filter: {}
+- table:
     name: users
     schema: public
   array_relationships:
@@ -36,6 +81,13 @@
           column: user_id
           table:
             name: addresses
+            schema: public
+    - name: chat_messages
+      using:
+        foreign_key_constraint_on:
+          column: user_id
+          table:
+            name: chat_messages
             schema: public
   select_permissions:
     - role: user
@@ -52,7 +104,4 @@
           - user_type
           - updated_at
           - uuid
-        filter:
-          id:
-            _eq: x-Hasura-user-id
-        limit: 1
+        filter: {}
