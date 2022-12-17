@@ -24,4 +24,17 @@ public class UserRestController {
 
         return new ResponseEntity<>(user, OK);
     }
+
+    @GetMapping(value = "/users/details")
+    public ResponseEntity<User> getDetails() {
+        log.info("get user details");
+        User user = User.builder()
+                .id(1L)
+                .firstName("Folau")
+                .lastName("Kaveinga")
+                .build();
+        log.info("user={}", ObjectUtils.toJson(user));
+
+        return new ResponseEntity<>(user, OK);
+    }
 }
