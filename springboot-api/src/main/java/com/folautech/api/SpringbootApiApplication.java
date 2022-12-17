@@ -1,5 +1,6 @@
 package com.folautech.api;
 
+import com.folautech.api.dataloader.ChatDataLoaderService;
 import com.folautech.api.dataloader.UserDataLoaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -23,6 +24,8 @@ public class SpringbootApiApplication implements CommandLineRunner {
     }
     @Autowired
     private UserDataLoaderService userDataLoaderService;
+    @Autowired
+    private ChatDataLoaderService chatDataLoaderService;
 
     @Order(Integer.MAX_VALUE)
     @Bean
@@ -59,6 +62,8 @@ public class SpringbootApiApplication implements CommandLineRunner {
                 System.out.println();
 
                 userDataLoaderService.load();
+
+                chatDataLoaderService.load();
 
                 System.out.println("Data loaded!");
 

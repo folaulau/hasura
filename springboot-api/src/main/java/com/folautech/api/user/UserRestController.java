@@ -13,6 +13,9 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 public class UserRestController {
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping(value = "/users/update")
     public ResponseEntity<User> update(
             @RequestBody User user) {
@@ -23,6 +26,16 @@ public class UserRestController {
         log.info("updated user={}", ObjectUtils.toJson(user));
 
         return new ResponseEntity<>(user, OK);
+    }
+
+    @PostMapping(value = "/users/login")
+    public ResponseEntity<AuthenticationResponseDTO> login(
+            @RequestBody AuthenticatorDTO authenticatorDTO) {
+        log.info("login authenticatorDTO={}", ObjectUtils.toJson(authenticatorDTO));
+
+        AuthenticationResponseDTO authenticationResponseDTO = userService.login(authenticatorDTO);
+
+        return new ResponseEntity<>(authenticationResponseDTO, OK);
     }
 
     @GetMapping(value = "/users/details")
