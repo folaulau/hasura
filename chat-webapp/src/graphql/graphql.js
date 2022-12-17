@@ -30,7 +30,7 @@ const GraphQL = {
                             first_name
                             last_name
                         }
-                }
+                    }
                 }
             }
         `
