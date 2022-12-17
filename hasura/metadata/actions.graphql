@@ -1,0 +1,17 @@
+type Mutation {
+  updateUser(
+    firstName: String!
+    lastName: String!
+  ): UserInfo
+}
+
+input SampleInput {
+  username: String!
+  password: String!
+}
+
+type UserInfo {
+  firstName: String!
+  lastName: String!
+}
+

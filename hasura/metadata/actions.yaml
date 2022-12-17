@@ -1,0 +1,24 @@
+actions:
+  - name: updateUser
+    definition:
+      kind: synchronous
+      handler: http://host.docker.internal:8088/users/update
+      forward_client_headers: true
+      request_transform:
+        body: |-
+          {
+            "firstName": {{$body.input.firstName}},
+            "lastName": {{$body.input.lastName}}
+          }
+        content_type: application/json
+        template_engine: Kriti
+    permissions:
+      - role: user
+    comment: Update User
+custom_types:
+  enums: []
+  input_objects:
+    - name: SampleInput
+  objects:
+    - name: UserInfo
+  scalars: []
