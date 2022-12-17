@@ -10,8 +10,8 @@ actions:
             "firstName": {{$body.input.firstName}},
             "lastName": {{$body.input.lastName}}
           }
-        content_type: application/json
         template_engine: Kriti
+        version: 1
     permissions:
       - role: user
     comment: Update User
