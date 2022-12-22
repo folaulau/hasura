@@ -16,7 +16,7 @@ const client = new ApolloClient({
 
 const CHAT_MESSAGES_SUBSCRIPTION = gql`
   subscription ChatSubscription {
-    chats(where: {id: {_eq: "1"}}) {
+    chats(where: {id: {_eq: 1}}) {
       chat_messages {
         id
         message
@@ -27,7 +27,7 @@ const CHAT_MESSAGES_SUBSCRIPTION = gql`
         }
       }
     }
-}  
+  }  
 `;
 
 function ChatMessages() {
@@ -40,16 +40,12 @@ function ChatMessages() {
   console.log(loading)
   console.log("error")
   console.log(error)
-  return <h4>New comment: {!loading && data}</h4>;
+  return <h4>New message: {!loading && data}</h4>;
 }
 
-function App() {
-
-
+function Subscription() {
 
   useEffect(() => {
-
-
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -64,7 +60,7 @@ function App() {
 
         <div className="row">
           <div className="col-12">
-            <h1>Hasura Chat</h1>
+            <h1>Hasura Subscription Chat</h1>
 
             <ChatMessages />
            
@@ -77,4 +73,4 @@ function App() {
   );
 }
 
-export default App;
+export default Subscription;
