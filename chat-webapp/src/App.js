@@ -1,17 +1,22 @@
 import React from "react";
 import { useEffect} from "react";
-import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
-import { createClient } from 'graphql-ws';
-import { ApolloClient, InMemoryCache, useSubscription, ApolloProvider } from '@apollo/client';
-import { gql } from "@apollo/client";
+import { WebSocketLink } from '@apollo/client';
+import { SubscriptionClient } from 'subscriptions-transport-ws';
+import { InMemoryCache } from '@apollo/client';
+import { useSubscription } from '@apollo/client';
+import gql from 'graphql-tag';
 
-const wsLink = new GraphQLWsLink(createClient({
-  url: 'ws://localhost:7005/v1/graphql',
-}));
+import { ApolloClient, ApolloProvider, HttpLink } from '@apollo/client';
+
+
+const wsClient = new SubscriptionClient(
+  'wss://localhost:7005/v1/graphql',
+  { reconnect: true }
+);
 
 const client = new ApolloClient({
-  link: wsLink,
-  cache: new InMemoryCache()
+  link: new WebSocketLink(wsClient),
+  cache: new InMemoryCache(),
 });
 
 const CHAT_MESSAGES_SUBSCRIPTION = gql`
@@ -31,16 +36,24 @@ const CHAT_MESSAGES_SUBSCRIPTION = gql`
 `;
 
 function ChatMessages() {
-  const { data, loading, error } = useSubscription(
-    CHAT_MESSAGES_SUBSCRIPTION
-  );
+  const { data, loading, error } = useSubscription(CHAT_MESSAGES_SUBSCRIPTION);
+
   console.log("data")
   console.log(data)
   console.log("loading")
   console.log(loading)
   console.log("error")
   console.log(error)
-  return <h4>New comment: {!loading && data}</h4>;
+
+  if (loading) return 'Loading...';
+  if (error) return `Error: ${error.message}`;
+
+  return (
+    <div>
+      {data.chats[0]['chat_messages'][0].id}
+      {data.chats[0]['chat_messages'][0].message}
+    </div>
+  );
 }
 
 function App() {
@@ -57,7 +70,6 @@ function App() {
 
 
   return (
-    <ApolloProvider client={client} >
     <div className="container">
       <div className="row">
         <div className="col-6 offset-3">
@@ -73,7 +85,6 @@ function App() {
         </div>
       </div>
     </div>
-    </ApolloProvider>
   );
 }
 

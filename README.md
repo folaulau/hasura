@@ -58,3 +58,6 @@ View - view is only for static queries. It does not accept parameters to manipul
 https://hasura.io/docs/latest/schema/postgres/computed-fields/
 
 Recommendation: use backend api to run complicated queries.
+
+### Subscription with Appollo Client
+https://hasura.io/learn/graphql/react/apollo-client/
