@@ -1,22 +1,27 @@
 package com.folautech.api.user;
 
 import com.folautech.api.utils.ObjectUtils;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RestController;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.OK;
 
-@Slf4j
+
+@Tag(name = "User", description = "User Endpoints")
+@RequestMapping("/users")
 @RestController
+@Slf4j
 public class UserRestController {
 
     @Autowired
     private UserService userService;
 
-    @PostMapping(value = "/users/update")
+    @PostMapping(value = "/update")
     public ResponseEntity<User> update(
             @RequestBody User user) {
         log.info("update user={}", ObjectUtils.toJson(user));
@@ -28,7 +33,7 @@ public class UserRestController {
         return new ResponseEntity<>(user, OK);
     }
 
-    @PostMapping(value = "/users/login")
+    @PostMapping(value = "/login")
     public ResponseEntity<AuthenticationResponseDTO> login(
             @RequestBody AuthenticatorDTO authenticatorDTO) {
         log.info("login authenticatorDTO={}", ObjectUtils.toJson(authenticatorDTO));
@@ -38,7 +43,7 @@ public class UserRestController {
         return new ResponseEntity<>(authenticationResponseDTO, OK);
     }
 
-    @GetMapping(value = "/users/details")
+    @GetMapping(value = "/details")
     public ResponseEntity<User> getDetails() {
         log.info("get user details");
         User user = User.builder()

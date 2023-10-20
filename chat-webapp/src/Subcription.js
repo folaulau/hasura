@@ -3,11 +3,11 @@ import { useEffect} from "react";
 
 function Subscription() {
 
-
+  let apiToken = process.env.REACT_APP_API_TOKEN
 
   useEffect(() => {
 
-
+    console.log("Subscription apiToken, ", apiToken)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

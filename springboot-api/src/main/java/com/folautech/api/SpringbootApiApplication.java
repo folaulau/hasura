@@ -52,7 +52,7 @@ public class SpringbootApiApplication implements CommandLineRunner {
                 System.out.println("** Internal Url: http://localhost:" + env.getProperty("server.port"));
                 System.out.println("** External Url: http://" + InetAddress.getLocalHost().getHostAddress() + ":" + env.getProperty("server.port"));
 
-                System.out.println("** Internal Swagger: http://localhost:" + env.getProperty("server.port") + "/swagger-ui.html");
+                System.out.println("** Internal Swagger: http://localhost:" + env.getProperty("server.port") + "/swagger-ui/index.html");
 
                 System.out.println("\n************************* Hasura *************************************");
                 System.out.println("** (double check port in docker-composer.yaml file) ");

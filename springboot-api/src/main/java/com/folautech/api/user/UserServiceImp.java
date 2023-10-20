@@ -16,7 +16,7 @@ public class UserServiceImp implements UserService{
 
     @Override
     public String generateApiToken(User user) {
-        return null;
+        return jwtTokenService.generateToken(user);
     }
 
     @Override
