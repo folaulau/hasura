@@ -104,4 +104,7 @@
           - user_type
           - updated_at
           - uuid
-        filter: {}
+        filter:
+          id:
+            _eq: x-Hasura-user-id
+        limit: 1

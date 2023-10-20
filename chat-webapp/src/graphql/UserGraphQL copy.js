@@ -4,13 +4,15 @@ var instance = axios.create({
     baseURL: process.env.REACT_APP_GRAPHQL_URL
 });
 
-const GraphQL = {
+var bearerToken = process.env.REACT_APP_API_TOKEN
 
-    getChatMessages: (chatId) => {
+const MessageGraphQL = {
+
+    getMessages: (chatId) => {
 
         let headers = {
             'Content-Type': 'application/json',
-            'Authorization': "Bearer " + localStorage.getItem('authToken')
+            'Authorization': "Bearer " + bearerToken
         }
 
         const options = {
@@ -43,4 +45,4 @@ const GraphQL = {
    
 }
 
-export default GraphQL;
+export default MessageGraphQL;
