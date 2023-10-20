@@ -20,19 +20,7 @@ public class UserRestController {
 
     @Autowired
     private UserService userService;
-
-    @PostMapping(value = "/update")
-    public ResponseEntity<User> update(
-            @RequestBody User user) {
-        log.info("update user={}", ObjectUtils.toJson(user));
-
-        user.setLastName("updated lastname");
-
-        log.info("updated user={}", ObjectUtils.toJson(user));
-
-        return new ResponseEntity<>(user, OK);
-    }
-
+    
     @PostMapping(value = "/login")
     public ResponseEntity<AuthenticationResponseDTO> login(
             @RequestBody AuthenticatorDTO authenticatorDTO) {
@@ -43,15 +31,21 @@ public class UserRestController {
         return new ResponseEntity<>(authenticationResponseDTO, OK);
     }
 
+    @PostMapping(value = "/update")
+    public ResponseEntity<User> update(
+            @RequestBody UserUpdateDTO userUpdateDTO) {
+        log.info("update userUpdateDTO={}", ObjectUtils.toJson(userUpdateDTO));
+
+        User user = userService.update(userUpdateDTO);
+
+        return new ResponseEntity<>(user, OK);
+    }
+
     @GetMapping(value = "/details")
-    public ResponseEntity<User> getDetails() {
+    public ResponseEntity<User> getDetails(@RequestParam long id) {
         log.info("get user details");
-        User user = User.builder()
-                .id(1L)
-                .firstName("Folau")
-                .lastName("Kaveinga")
-                .build();
-        log.info("user={}", ObjectUtils.toJson(user));
+        
+        User user = userService.getById(id);
 
         return new ResponseEntity<>(user, OK);
     }

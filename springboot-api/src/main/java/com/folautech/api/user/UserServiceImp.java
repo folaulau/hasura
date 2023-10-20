@@ -7,10 +7,11 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class UserServiceImp implements UserService{
+public class UserServiceImp implements UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository  userRepository;
+
     @Autowired
     private JwtTokenService jwtTokenService;
 
@@ -31,5 +32,26 @@ public class UserServiceImp implements UserService{
         auth.setId(user.getId());
         auth.setToken(jwtToken);
         return auth;
+    }
+
+    @Override
+    public User update(UserUpdateDTO userUpdateDTO) {
+
+        User user = userRepository.findById(userUpdateDTO.getId()).orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setFirstName(userUpdateDTO.getFirstName());
+        user.setLastName(userUpdateDTO.getLastName());
+        user.setPhoneNumber(userUpdateDTO.getPhoneNumber());
+        user.setDob(userUpdateDTO.getDob());
+
+        return userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public User getById(long id) {
+        
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+
+        return user;
     }
 }
