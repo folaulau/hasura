@@ -2,11 +2,12 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
-
 ### Resources
 https://www.apollographql.com/blog/apollo-client/subscriptions/graphql-subscriptions-in-apollo-client/
 
+https://www.apollographql.com/docs/react/data/subscriptions/
+
+## Available Scripts
 
 In the project directory, you can run:
 
