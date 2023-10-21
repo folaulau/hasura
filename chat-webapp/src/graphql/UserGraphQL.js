@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 var instance = axios.create({
-    baseURL: process.env.REACT_APP_GRAPHQL_URL
+    baseURL: process.env.REACT_APP_GRAPHQL_URL+"/v1/graphql"
 });
 
 var bearerToken = process.env.REACT_APP_API_TOKEN
@@ -25,11 +25,11 @@ const UserGraphQL = {
             query GetUserInfo {
                 users {
                     id
-                    last_name
-                    first_name
-                    phone_number
+                    lastName: last_name
+                    firstName: first_name
+                    phoneNumber: phone_number
                     updated_at
-                    user_type
+                    userType: user_type
                     uuid
                     email
                     dob
