@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 var instance = axios.create({
-    baseURL: process.env.REACT_APP_GRAPHQL_URL+"/v1/graphql"
+    baseURL: process.env.REACT_APP_GRAPHQL_URL
 });
 
 var bearerToken = process.env.REACT_APP_API_TOKEN

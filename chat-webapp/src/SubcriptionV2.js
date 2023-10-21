@@ -9,89 +9,8 @@ import { useEffect, Fragment, useState } from "react";
 // import UserApi from "./api/UserApi";
 import UserGraphQL from "./graphql/UserGraphQL";
 
-// import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink } from '@apollo/client';
-// import { WebSocketLink } from "@apollo/client/link/ws";
-
-// import { Fragment } from "react";
-// import { useMutation, useSubscription, gql, useQuery } from "@apollo/client";
-
-import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider, split, HttpLink } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
 import { useQuery, gql, useSubscription } from '@apollo/client';
-import { WebSocketLink } from "@apollo/client/link/ws";
-import { getMainDefinition } from "@apollo/client/utilities";
-
-import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
-import { createClient } from 'graphql-ws';
-
-
-// const httpLink = new HttpLink({
-//   uri: 'http://localhost:7005/v1/graphql'
-// });
-
-// const wsLink = new GraphQLWsLink(createClient({
-//   url: 'ws://localhost:7005/v1/graphql',
-// }));
-
-// const splitLink = split(
-//   ({ query }) => {
-//     const definition = getMainDefinition(query);
-//     return (
-//       definition.kind === 'OperationDefinition' &&
-//       definition.operation === 'subscription'
-//     );
-//   },
-//   wsLink,
-//   httpLink,
-// );
-
-// const client = new ApolloClient({
-//   link: splitLink,
-//   cache: new InMemoryCache()
-// });
-
-const httpLink = createHttpLink({
-  uri: 'http://localhost:7005/v1/graphql',
-  headers: {
-    Authorization: `Bearer ${process.env.REACT_APP_API_TOKEN}`
-  },
-
-});
-
-// // Create a WebSocket link:
-const wsLink = new WebSocketLink({
-  uri: `http://localhost:7005/v1/graphql`,
-  options: {
-    reconnect: true,
-    lazy: true,
-    onnectionParams: {
-      headers: {
-        Authorization: `Bearer ${process.env.REACT_APP_API_TOKEN}`
-      }
-    }
-  }
-});
-
-// using the ability to split links, you can send data to each link
-// depending on what kind of operation is being sent
-const link = split(
-  // split based on operation type
-  ({ query }) => {
-    const definition = getMainDefinition(query);
-    return (
-      definition.kind === 'OperationDefinition' &&
-      definition.operation === 'subscription'
-    );
-  },
-  wsLink,
-  httpLink,
-);
-
-
-const client = new ApolloClient({
-  link: link,
-  cache: new InMemoryCache()
-});
+import GraphQLClient from "./graphql/GraphQLConfig";
 
 const GET_USER_DATA = gql`
   query GetUserInfo {
@@ -123,7 +42,10 @@ const SUB_USER_DATA = gql`
 
 function SubscriptionV2() {
 
-  // const { loading, error, data } = useQuery(GET_USER_DATA);
+  const userData = useQuery(GET_USER_DATA);
+  //userData.loading = loading
+  //userData.error = error
+  console.log('userData ', userData)
 
   let userId = 2
 
@@ -135,35 +57,25 @@ function SubscriptionV2() {
 
   let apiToken = process.env.REACT_APP_API_TOKEN
 
+  console.log("Subscription apiToken, ", apiToken)
+
   const [userInfo, setUserInfo] = useState({"firstName":"", "lastName":""})
+
+  const [userDetails, setUserDetails] = useState({"firstName":"", "lastName":""})
 
   useEffect(() => {
 
-  client
-  .query({
-    query: gql`
-      query GetUserInfo {
-        users {
-            id
-            lastName: last_name
-            firstName: first_name
-            phoneNumber: phone_number
-            updated_at
-            user_type
-            uuid
-            email
-            dob
-            created_at
-        }
-      }
-    `,
-  })
-  .then((result) => {
-    console.log(`client query result`)
-    console.log(result)
-  });
+    GraphQLClient
+    .query({
+      query: GET_USER_DATA
+    })
+    .then((result) => {
+      console.log(`client query result`)
+      console.log(result.data.users[0])
+      setUserDetails(result.data.users[0])
 
-    console.log("Subscription apiToken, ", apiToken)
+
+    });
 
     UserGraphQL.getUserDetails().then((response) => {
       console.log("getUserDetails response: ", response);
@@ -197,10 +109,22 @@ function SubscriptionV2() {
           <div className="row">
             <div className="col-12">
               <h5>Hello {userInfo.firstName} {userInfo.lastName}, id={userInfo.id}, userTye={userInfo.userType}</h5>
+            
+              <hr/>
               <div>
+                <b>Appollo useQuery</b>
+              </div>
+            
+              <div>
+              {
+                !userData.loading && 
+                JSON.stringify(userData.data)
+              }
+              </div>
 
+              <hr/>
               <div>
-                <b>Subscription</b>
+                <b>Appollo useSubscription</b>
               </div>
               <div>data</div>
               {
@@ -210,16 +134,14 @@ function SubscriptionV2() {
               {/* {
                 JSON.stringify(userSubError)
               } */}
-
-              <div><b>GraphQL</b></div>
+              <hr/>
+              <div><b>Appollo Client query</b></div>
               <div>data</div>
-              </div>
-              {/* <ChatMessages /> */}
 
-              {/* {
-                JSON.stringify(data)
+              {
+                JSON.stringify(userDetails)
               }
-    */}
+   
             
             </div>
           </div>

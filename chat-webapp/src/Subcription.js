@@ -142,7 +142,7 @@ const SUB_USER_DATA = gql`
 
 function Subscription() {
 
-  // const { loading, error, data } = useQuery(GET_USER_DATA);
+  const { userDataLoading, userDataError, userData } = useQuery(GET_USER_DATA);
 
   let userId = 2
 
@@ -217,6 +217,16 @@ function Subscription() {
             <div className="col-12">
               <h5>Hello {userInfo.firstName} {userInfo.lastName}, id={userInfo.id}, userTye={userInfo.userType}</h5>
               <div>
+
+              <div>
+                <b>Appollo Query</b>
+              </div>
+
+              <div>
+              {
+                JSON.stringify(userData)
+              }
+              </div>
 
               <div>
                 <b>Subscription</b>
