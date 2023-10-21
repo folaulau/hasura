@@ -47,8 +47,6 @@ function SubscriptionV2() {
   //userData.error = error
   console.log('userData ', userData)
 
-  let userId = 2
-
   const userSubData = useSubscription(SUB_USER_DATA);
 
   // console.log(userSubLoading)
@@ -66,8 +64,6 @@ function SubscriptionV2() {
   const [userSubDetails, setUserSubDetails] = useState({"firstName":"", "lastName":""})
 
   useEffect(() => {
-
-
 
     GraphQLClient
     .query({

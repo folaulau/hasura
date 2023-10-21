@@ -4,6 +4,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
+### Resources
+https://www.apollographql.com/blog/apollo-client/subscriptions/graphql-subscriptions-in-apollo-client/
+
+
 In the project directory, you can run:
 
 ### `npm start`
