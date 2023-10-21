@@ -53,7 +53,7 @@ function SubscriptionV2() {
 
   // console.log(userSubLoading)
   // console.log(userSubError)
-  console.log('userSubData, ',userSubData)
+  // console.log('userSubData, ',userSubData)
 
   let apiToken = process.env.REACT_APP_API_TOKEN
 
@@ -63,7 +63,11 @@ function SubscriptionV2() {
 
   const [userDetails, setUserDetails] = useState({"firstName":"", "lastName":""})
 
+  const [userSubDetails, setUserSubDetails] = useState({"firstName":"", "lastName":""})
+
   useEffect(() => {
+
+
 
     GraphQLClient
     .query({
@@ -73,9 +77,24 @@ function SubscriptionV2() {
       console.log(`client query result`)
       console.log(result.data.users[0])
       setUserDetails(result.data.users[0])
-
-
     });
+
+    GraphQLClient.subscribe({query: SUB_USER_DATA})
+    .subscribe({
+      next(result) {
+        console.log(`client sub result`)
+        console.log(result)
+
+        setUserSubDetails(result.data.users[0])
+        // ... call updateQuery to integrate the new comment
+        // into the existing list of comments
+      },
+      error(err) { console.error('err', err); },
+    });
+  
+
+    // console.log("getUserDetails data: ", subscription.subscribe());
+
 
     UserGraphQL.getUserDetails().then((response) => {
       console.log("getUserDetails response: ", response);
@@ -128,12 +147,16 @@ function SubscriptionV2() {
               </div>
               <div>data</div>
               {
-                JSON.stringify(userSubData)
+                JSON.stringify(userSubData.data)
               }
               <div>error</div>
-              {/* {
-                JSON.stringify(userSubError)
-              } */}
+              {
+                JSON.stringify(userSubData.error)
+              }
+              <div>loading</div>
+              {
+                JSON.stringify(userSubData.loading)
+              }
               <hr/>
               <div><b>Appollo Client query</b></div>
               <div>data</div>
@@ -141,8 +164,18 @@ function SubscriptionV2() {
               {
                 JSON.stringify(userDetails)
               }
+
+              <div><b>Appollo Client subscribe</b></div>
+              <div>data</div>
+
+              {
+                JSON.stringify(userSubDetails)
+              }
    
-            
+              <br/>
+              <br/>
+              <br/>
+              <br/>
             </div>
           </div>
 
