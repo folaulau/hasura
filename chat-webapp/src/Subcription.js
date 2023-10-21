@@ -9,107 +9,8 @@ import { useEffect, Fragment, useState } from "react";
 // import UserApi from "./api/UserApi";
 import UserGraphQL from "./graphql/UserGraphQL";
 
-// import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink } from '@apollo/client';
-// import { WebSocketLink } from "@apollo/client/link/ws";
-
-// import { Fragment } from "react";
-// import { useMutation, useSubscription, gql, useQuery } from "@apollo/client";
-
-import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider, split } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
 import { useQuery, gql, useSubscription } from '@apollo/client';
-import { WebSocketLink } from "@apollo/client/link/ws";
-import { getMainDefinition } from "@apollo/client/utilities";
-
-// const httpLink = new HttpLink({
-//   uri: 'http://http://localhost:7005//v1/graphql'
-// });
-
-// const wsLink = new GraphQLWsLink(createClient({
-//   url: 'wss://http://localhost:7005//v1/graphql',
-// }));
-
-// const splitLink = split(
-//   ({ query }) => {
-//     const definition = getMainDefinition(query);
-//     return (
-//       definition.kind === 'OperationDefinition' &&
-//       definition.operation === 'subscription'
-//     );
-//   },
-//   wsLink,
-//   httpLink
-// );
-
-// const client = new ApolloClient({
-//   link: splitLink,
-//   cache: new InMemoryCache(),
-// });
-
-// const httpLink = createHttpLink({
-//   uri: 'http://localhost:7005/graphql',
-// });
-
-// const authLink = setContext((_, { headers }) => {
-//   // get the authentication token from local storage if it exists
-//   const token = process.env.REACT_APP_API_TOKEN
-//   // return the headers to the context so httpLink can read them
-//   return {
-//     headers: {
-//       ...headers,
-//       authorization: token ? `Bearer ${token}` : "",
-//     }
-//   }
-// });
-
-// const client = new ApolloClient({
-//   // uri: 'http://localhost:7005/v1/graphql',
-//   link: authLink.concat(httpLink),
-//   cache: new InMemoryCache()
-// });
-
-const httpLink = createHttpLink({
-  uri: 'http://localhost:7005/v1/graphql',
-  headers: {
-    Authorization: `Bearer ${process.env.REACT_APP_API_TOKEN}`
-  },
-
-});
-
-// Create a WebSocket link:
-const wsLink = new WebSocketLink({
-  uri: `http://localhost:7005/v1/graphql`,
-  options: {
-    reconnect: true,
-    lazy: true,
-    onnectionParams: {
-      headers: {
-        Authorization: `Bearer ${process.env.REACT_APP_API_TOKEN}`
-      }
-    }
-  }
-});
-
-// using the ability to split links, you can send data to each link
-// depending on what kind of operation is being sent
-const link = split(
-  // split based on operation type
-  ({ query }) => {
-    const definition = getMainDefinition(query);
-    return (
-      definition.kind === 'OperationDefinition' &&
-      definition.operation === 'subscription'
-    );
-  },
-  wsLink,
-  httpLink,
-);
-
-
-const client = new ApolloClient({
-  link: link,
-  cache: new InMemoryCache()
-});
+import GraphQLClient from "./graphql/GraphQLConfig";
 
 const GET_USER_DATA = gql`
   query GetUserInfo {
@@ -131,58 +32,69 @@ const GET_USER_DATA = gql`
 // https://www.apollographql.com/docs/react/api/react/hooks/#usesubscription
 const SUB_USER_DATA = gql`
   subscription MySubscription {
-    users(where: {id: {_eq: "2"}}) {
+    users{
       id
       first_name
       last_name
-      user_type
     }
   }
 `;
 
-function Subscription() {
+function SubscriptionV2() {
 
-  const { userDataLoading, userDataError, userData } = useQuery(GET_USER_DATA);
+  const userData = useQuery(GET_USER_DATA);
+  //userData.loading = loading
+  //userData.error = error
+  console.log('userData ', userData)
 
   let userId = 2
 
-  const { userSubLoading, userSubError, userSubData } = useSubscription(SUB_USER_DATA);
+  const userSubData = useSubscription(SUB_USER_DATA);
 
-  console.log(userSubLoading)
-  console.log(userSubError)
-  console.log('userSubData, ',userSubData)
+  // console.log(userSubLoading)
+  // console.log(userSubError)
+  // console.log('userSubData, ',userSubData)
 
   let apiToken = process.env.REACT_APP_API_TOKEN
 
+  console.log("Subscription apiToken, ", apiToken)
+
   const [userInfo, setUserInfo] = useState({"firstName":"", "lastName":""})
+
+  const [userDetails, setUserDetails] = useState({"firstName":"", "lastName":""})
+
+  const [userSubDetails, setUserSubDetails] = useState({"firstName":"", "lastName":""})
 
   useEffect(() => {
 
-  client
-  .query({
-    query: gql`
-      query GetUserInfo {
-        users {
-            id
-            lastName: last_name
-            firstName: first_name
-            phoneNumber: phone_number
-            updated_at
-            user_type
-            uuid
-            email
-            dob
-            created_at
-        }
-      }
-    `,
-  })
-  .then((result) => {
-    console.log(`client query result`)
-    console.log(result)
-  });
 
-    console.log("Subscription apiToken, ", apiToken)
+
+    GraphQLClient
+    .query({
+      query: GET_USER_DATA
+    })
+    .then((result) => {
+      console.log(`client query result`)
+      console.log(result.data.users[0])
+      setUserDetails(result.data.users[0])
+    });
+
+    GraphQLClient.subscribe({query: SUB_USER_DATA})
+    .subscribe({
+      next(result) {
+        console.log(`client sub result`)
+        console.log(result)
+
+        setUserSubDetails(result.data.users[0])
+        // ... call updateQuery to integrate the new comment
+        // into the existing list of comments
+      },
+      error(err) { console.error('err', err); },
+    });
+  
+
+    // console.log("getUserDetails data: ", subscription.subscribe());
+
 
     UserGraphQL.getUserDetails().then((response) => {
       console.log("getUserDetails response: ", response);
@@ -206,7 +118,7 @@ function Subscription() {
 
           <div className="row">
             <div className="col-12">
-              <h1>Hasura Chat</h1>
+              <h1>Hasura Subscription V2</h1>
 
               {/* <ChatMessages /> */}
             
@@ -216,40 +128,54 @@ function Subscription() {
           <div className="row">
             <div className="col-12">
               <h5>Hello {userInfo.firstName} {userInfo.lastName}, id={userInfo.id}, userTye={userInfo.userType}</h5>
+            
+              <hr/>
               <div>
-
-              <div>
-                <b>Appollo Query</b>
+                <b>Appollo useQuery</b>
               </div>
-
+            
               <div>
               {
-                JSON.stringify(userData)
+                !userData.loading && 
+                JSON.stringify(userData.data)
               }
               </div>
 
+              <hr/>
               <div>
-                <b>Subscription</b>
+                <b>Appollo useSubscription</b>
               </div>
-              <div>data {userSubLoading}</div>
+              <div>data</div>
               {
-                JSON.stringify(userSubData)
+                JSON.stringify(userSubData.data)
               }
               <div>error</div>
               {
-                JSON.stringify(userSubError)
+                JSON.stringify(userSubData.error)
               }
-
-              <div><b>GraphQL</b></div>
+              <div>loading</div>
+              {
+                JSON.stringify(userSubData.loading)
+              }
+              <hr/>
+              <div><b>Appollo Client query</b></div>
               <div>data</div>
-              </div>
-              {/* <ChatMessages /> */}
 
-              {/* {
-                JSON.stringify(data)
+              {
+                JSON.stringify(userDetails)
               }
-    */}
-            
+
+              <div><b>Appollo Client subscribe</b></div>
+              <div>data</div>
+
+              {
+                JSON.stringify(userSubDetails)
+              }
+   
+              <br/>
+              <br/>
+              <br/>
+              <br/>
             </div>
           </div>
 
@@ -261,4 +187,4 @@ function Subscription() {
   );
 }
 
-export default Subscription;
+export default SubscriptionV2;

@@ -2,12 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import SubscriptionWithAppolloClient from './SubscriptionWithAppolloClient';
 import reportWebVitals from './reportWebVitals';
-import App from './App';
-import Subscription from './Subcription';
 import { ApolloProvider} from '@apollo/client';
-import SubscriptionV2 from './SubcriptionV2';
+import Subscription from './Subcription';
 import GraphQLClient from "./graphql/GraphQLConfig";
 // import { split } from 'apollo-link';
 
@@ -15,7 +12,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <ApolloProvider client={GraphQLClient}>
-    <SubscriptionV2 />
+    <Subscription />
   </ApolloProvider>
 );
 
