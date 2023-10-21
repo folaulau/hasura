@@ -41,8 +41,6 @@ public class UserServiceImp implements UserService {
 
         user.setFirstName(userUpdateDTO.getFirstName());
         user.setLastName(userUpdateDTO.getLastName());
-        user.setPhoneNumber(userUpdateDTO.getPhoneNumber());
-        user.setDob(userUpdateDTO.getDob());
 
         return userRepository.saveAndFlush(user);
     }

@@ -15,18 +15,22 @@ import UserGraphQL from "./graphql/UserGraphQL";
 // import { Fragment } from "react";
 // import { useMutation, useSubscription, gql, useQuery } from "@apollo/client";
 
-import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider, split } from '@apollo/client';
+import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider, split, HttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { useQuery, gql, useSubscription } from '@apollo/client';
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { createClient } from 'graphql-ws';
+
+
 // const httpLink = new HttpLink({
-//   uri: 'http://http://localhost:7005//v1/graphql'
+//   uri: 'http://localhost:7005/v1/graphql'
 // });
 
 // const wsLink = new GraphQLWsLink(createClient({
-//   url: 'wss://http://localhost:7005//v1/graphql',
+//   url: 'ws://localhost:7005/v1/graphql',
 // }));
 
 // const splitLink = split(
@@ -38,33 +42,11 @@ import { getMainDefinition } from "@apollo/client/utilities";
 //     );
 //   },
 //   wsLink,
-//   httpLink
+//   httpLink,
 // );
 
 // const client = new ApolloClient({
 //   link: splitLink,
-//   cache: new InMemoryCache(),
-// });
-
-// const httpLink = createHttpLink({
-//   uri: 'http://localhost:7005/graphql',
-// });
-
-// const authLink = setContext((_, { headers }) => {
-//   // get the authentication token from local storage if it exists
-//   const token = process.env.REACT_APP_API_TOKEN
-//   // return the headers to the context so httpLink can read them
-//   return {
-//     headers: {
-//       ...headers,
-//       authorization: token ? `Bearer ${token}` : "",
-//     }
-//   }
-// });
-
-// const client = new ApolloClient({
-//   // uri: 'http://localhost:7005/v1/graphql',
-//   link: authLink.concat(httpLink),
 //   cache: new InMemoryCache()
 // });
 
@@ -76,7 +58,7 @@ const httpLink = createHttpLink({
 
 });
 
-// Create a WebSocket link:
+// // Create a WebSocket link:
 const wsLink = new WebSocketLink({
   uri: `http://localhost:7005/v1/graphql`,
   options: {
@@ -132,22 +114,23 @@ const GET_USER_DATA = gql`
 const SUB_USER_DATA = gql`
   subscription MySubscription {
     users{
+      id
       first_name
       last_name
     }
   }
 `;
 
-function Subscription() {
+function SubscriptionV2() {
 
   // const { loading, error, data } = useQuery(GET_USER_DATA);
 
   let userId = 2
 
-  const { userSubLoading, userSubError, userSubData } = useSubscription(SUB_USER_DATA);
+  const userSubData = useSubscription(SUB_USER_DATA);
 
-  console.log(userSubLoading)
-  console.log(userSubError)
+  // console.log(userSubLoading)
+  // console.log(userSubError)
   console.log('userSubData, ',userSubData)
 
   let apiToken = process.env.REACT_APP_API_TOKEN
@@ -204,7 +187,7 @@ function Subscription() {
 
           <div className="row">
             <div className="col-12">
-              <h1>Hasura Chat</h1>
+              <h1>Hasura Subscription V2</h1>
 
               {/* <ChatMessages /> */}
             
@@ -219,14 +202,14 @@ function Subscription() {
               <div>
                 <b>Subscription</b>
               </div>
-              <div>data {userSubLoading}</div>
+              <div>data</div>
               {
                 JSON.stringify(userSubData)
               }
               <div>error</div>
-              {
+              {/* {
                 JSON.stringify(userSubError)
-              }
+              } */}
 
               <div><b>GraphQL</b></div>
               <div>data</div>
@@ -249,4 +232,4 @@ function Subscription() {
   );
 }
 
-export default Subscription;
+export default SubscriptionV2;
