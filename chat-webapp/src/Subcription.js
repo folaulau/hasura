@@ -131,9 +131,11 @@ const GET_USER_DATA = gql`
 // https://www.apollographql.com/docs/react/api/react/hooks/#usesubscription
 const SUB_USER_DATA = gql`
   subscription MySubscription {
-    users{
+    users(where: {id: {_eq: "2"}}) {
+      id
       first_name
       last_name
+      user_type
     }
   }
 `;
