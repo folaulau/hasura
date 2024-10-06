@@ -42,8 +42,7 @@ public class Message implements Serializable {
     @Column(name = "uuid", unique = true, nullable = false, updatable = false)
     private String uuid;
 
-//    @Lob
-    @Column(name = "message")
+    @Column(name = "message", columnDefinition = "TEXT")
     private String message;
 
     @JsonIgnoreProperties(value = {"messages"})
@@ -51,7 +50,7 @@ public class Message implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @JsonIgnoreProperties(value = {"users"})
+    @JsonIgnoreProperties(value = {"users","messages"})
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "chat_id")
     private Chat chat;

@@ -9,7 +9,8 @@ var hasuraWebSocketUrl = process.env.REACT_APP_GRAPHQL_WEBSOCKET_URL
 const httpLink = createHttpLink({
   uri: process.env.REACT_APP_GRAPHQL_URL,
   headers: {
-    Authorization: `Bearer ${process.env.REACT_APP_API_TOKEN}`
+    // Authorization: `Bearer ${process.env.REACT_APP_API_TOKEN}`,
+    "x-hasura-admin-secret":"test"
   },
 
 });
@@ -22,7 +23,8 @@ const wsLink = new WebSocketLink({
     lazy: true,
     connectionParams: {
       headers: {
-        Authorization: `Bearer ${process.env.REACT_APP_API_TOKEN}`
+        Authorization: `Bearer ${process.env.REACT_APP_API_TOKEN}`,
+        "x-hasura-admin-secret":"test"
       }
     }
   }

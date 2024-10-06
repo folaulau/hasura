@@ -29,8 +29,7 @@ import java.util.UUID;
 @JsonInclude(value = Include.NON_NULL)
 @DynamicUpdate
 @Entity
-@SQLDelete(sql = "UPDATE user SET deleted = 'T' WHERE id = ?", check = ResultCheckStyle.NONE)
-@Where(clause = "deleted = 'F'")
+@Where(clause = "deleted = false")
 @Table(name = "users", indexes = {@Index(columnList = "uuid"), @Index(columnList = "email"), @Index(columnList = "phone_number"), @Index(columnList = "deleted")})
 public class User implements Serializable {
 
@@ -51,7 +50,7 @@ public class User implements Serializable {
     private String lastName;
 
     @NotEmpty
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true, nullable = false, updatable = false)
     private String email;
 
     @Column(name = "phone_number")
@@ -87,7 +86,7 @@ public class User implements Serializable {
     @PrePersist
     private void preCreate() {
         if (this.uuid == null || this.uuid.isEmpty()) {
-            this.uuid = "user-" + UUID.randomUUID().toString();
+            this.uuid = "user-" + UUID.randomUUID().toString().replaceAll("-", "");
         }
     }
 

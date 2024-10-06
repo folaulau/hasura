@@ -30,6 +30,13 @@ public class SpringbootApiApplication implements CommandLineRunner {
     @Order(Integer.MAX_VALUE)
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
+
+        userDataLoaderService.load();
+
+        chatDataLoaderService.load();
+
+        System.out.println("Data loaded!");
+
         return args -> {
 
             // Display Environmental Useful Variables
@@ -60,12 +67,6 @@ public class SpringbootApiApplication implements CommandLineRunner {
                 System.out.println("** Console Url: http://localhost:" + hasuraServerPort + "/console");
                 System.out.println("** Health Check Url: http://localhost:" + hasuraServerPort + "/healthz");
                 System.out.println();
-
-                userDataLoaderService.load();
-
-                chatDataLoaderService.load();
-
-                System.out.println("Data loaded!");
 
             } catch (Exception e) {
                 e.printStackTrace();
