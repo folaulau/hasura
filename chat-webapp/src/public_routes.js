@@ -1,9 +1,9 @@
 import React from "react";
 import { useEffect} from "react";
 import { Routes, Route } from "react-router-dom";
-import Auth from "../components/Auth";
-import PublicHeader from "./layout/pub_header";
-import PublicFooter from "./layout/pub_footer";
+import Auth from "./components/Auth";
+import Header from "./layout/header";
+import Footer from "./layout/footer";
 import Home from "./pages/home";
 import SignIn from "./pages/signin";
 
@@ -32,8 +32,8 @@ function PublicRoutes() {
     </Routes>
   }
 
-  const getRoutes = (signIn) => {
-    if(signIn){
+  const getRoutes = (signingIn) => {
+    if(signingIn){
       return  <div className="col-12 col-sm-12">
         {getAllRoutes()}
       </div>
@@ -55,20 +55,19 @@ function PublicRoutes() {
         <div className="col-12 pt-3 ps-5 pe-5">
           <div className="row">
             <div className="col-12">
-              <PublicHeader />
+              <Header />
             </div>
           </div>
 
-          {/* <div className="row">
+          <div className="row">
               {
                 getRoutes(firstPathSegment==='signin')
               }
-           
-          </div> */}
+          </div>
 
           <div className="row">
             <div className="col-12">
-              <PublicFooter />
+              <Footer />
             </div>
           </div>
         </div>

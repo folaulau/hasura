@@ -1,13 +1,13 @@
-import './Footer.css';
 import React from 'react';
 import { useState , useEffect} from "react";
 
-function PublicFooter() {
+function Footer() {
 
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     console.log("PublicFooter");
+    setErrorMsg("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -34,4 +34,4 @@ function PublicFooter() {
   );
 }
 
-export default PublicFooter;
+export default Footer;

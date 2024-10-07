@@ -1,4 +1,3 @@
-import './Header.css';
 import React from 'react';
 import { useEffect} from "react";
 // import { useNavigate } from 'react-router-dom';
@@ -6,8 +5,7 @@ import Auth from '../components/Auth';
 import { useLocation } from 'react-router-dom';
 
 
-
-function PublicHeader() {
+function Header() {
 
   // const navigate = useNavigate();
 
@@ -85,4 +83,4 @@ function PublicHeader() {
   );
 }
 
-export default PublicHeader;
+export default Header;

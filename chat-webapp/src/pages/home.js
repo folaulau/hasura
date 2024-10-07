@@ -1,8 +1,6 @@
 
 import React from "react";
-import { useEffect, useState } from "react";
-import UserApi from "../api/userApi";
-import Auth from "../components/Auth";
+import { useEffect } from "react";
 
 function Home() {
 
